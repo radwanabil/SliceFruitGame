@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="pane" prefHeight="453.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.FirstScreenController">
+   <children>
+      <ImageView fitHeight="453.0" fitWidth="560.0">
+         <image>
+            <Image url="@../../fruit.jpg" />
+         </image>
+      </ImageView>
+      <Button layoutX="200.0" layoutY="116.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#classic" prefHeight="72.0" prefWidth="161.0" style="-fx-background-color: transparent;" textAlignment="CENTER">
+         <font>
+            <Font name="Segoe Print Bold" size="28.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="102.0" fitWidth="214.0">
+               <image>
+                  <Image url="@../../Classic.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="200.0" layoutY="244.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#archade" prefHeight="60.0" prefWidth="161.0" style="-fx-background-color: transparent;" textAlignment="CENTER">
+         <graphic>
+            <ImageView fitHeight="100.0" fitWidth="215.0">
+               <image>
+                  <Image url="@../../Arcade.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button layoutX="14.0" layoutY="26.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#highScore" prefHeight="90.0" prefWidth="120.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fitHeight="144.0" fitWidth="150.0">
+               <image>
+                  <Image url="@../../highscore.PNG" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button layoutX="390.0" layoutY="357.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#load" prefHeight="66.0" prefWidth="130.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fitHeight="105.0" fitWidth="209.0">
+               <image>
+                  <Image url="@../../Save.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+   </children>
+</AnchorPane>

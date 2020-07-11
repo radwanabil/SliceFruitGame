@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="pane" prefHeight="532.0" prefWidth="614.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.LevelScreenController">
+   <children>
+      <ImageView fitHeight="537.0" fitWidth="614.0" layoutX="3.0">
+         <image>
+            <Image url="@../../fruit.jpg" />
+         </image>
+      </ImageView>
+      <Button layoutX="239.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#easy" prefHeight="54.0" prefWidth="139.0" style="-fx-background-color: transparent;" textFill="#ff5d5d">
+         <font>
+            <Font name="Segoe Print Bold" size="35.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="77.0" fitWidth="220.0">
+               <image>
+                  <Image url="@../../easy.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="233.0" layoutY="235.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#medium" prefHeight="68.0" prefWidth="152.0" style="-fx-background-color: transparent;" textFill="#ff5d5d">
+         <font>
+            <Font name="Segoe Print Bold" size="35.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="78.0" fitWidth="226.0">
+               <image>
+                  <Image url="@../../medium.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="233.0" layoutY="327.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#hard" prefHeight="68.0" prefWidth="152.0" style="-fx-background-color: transparent;" textFill="#ff5d5d">
+         <font>
+            <Font name="Segoe Print Bold" size="36.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="75.0" fitWidth="223.0">
+               <image>
+                  <Image url="@../../hard.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="36.0" layoutY="377.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#back" prefHeight="121.0" prefWidth="124.0" style="-fx-background-color: transparent;">
+         <font>
+            <Font name="Arial Black" size="24.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="200.0" fitWidth="124.0">
+               <image>
+                  <Image url="@../../arrowlevel.gif" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+   </children>
+</AnchorPane>

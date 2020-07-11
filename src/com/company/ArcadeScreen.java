@@ -1,0 +1,559 @@
+package com.company;
+
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import org.w3c.dom.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.util.ArrayList;
+
+
+public class ArcadeScreen implements GameScreen
+{
+    MediaPlayer mediaPlayer;
+    MediaPlayer konbelasound;
+    MediaPlayer Explosion;
+    MediaPlayer fawakeh;
+    Media music1;
+    Media music2;
+    Media sound3;
+    Group pane;
+    Canvas canvas;
+    Scene scene;
+    Button pause;
+    Label scorelabel;
+    int score=0,min=0,max=0;
+    Label lb;
+    ScoreScreenController scorescreen;
+    boolean high;
+    Label HighScore;
+    AnimationTimer timer;
+    Save save;
+   // ArrayList<Sprite> spritesOnScreen;// = new ArrayList<>();
+   // ArrayList<Fruits> fruits ;//= new ArrayList<>();
+    ArrayList<Objects> objects ;
+    ArrayList<Objects> sliced;
+    private final Integer starttime=60;
+    int flag=0;
+    FruitsFactory Fruit;
+    highScore highscore;
+    PauseMenuController pausemenu;
+    blueBateeekha bluebateekha;
+    MozetElNagah moza;
+    KonbelaBOM konbela;
+    ArrayList<SpecialFruits> labels;
+    ArrayList<Konbela> labels2;
+    Button instructions;
+    static boolean soundmute;
+    private static ArcadeScreen arcadeScreen;
+    Integer seconds= starttime;
+    private ArcadeScreen(){
+        highscore=highScore.getHighscore();
+        canvas = new Canvas();
+        pause = new Button();
+        instructions = new Button();
+        scorelabel = new Label();
+        lb = new Label();
+        HighScore = new Label();
+        Fruit = new FruitsFactory();
+        music1 = new Media(new File("Bomb.mp3").toURI().toString());
+        music2 = new Media(new File("bombBomb.mp3").toURI().toString());
+        sound3 = new Media(new File("fallingFruits.mp3").toURI().toString());
+    }
+    public static ArcadeScreen getArcadeScreen()
+    {
+        if(arcadeScreen == null)
+            arcadeScreen = new ArcadeScreen();
+        return arcadeScreen;
+    }
+    public Integer getSeconds() {
+        return seconds;
+    }
+    @Override
+    public void drawGame(int min,int max) throws IOException {
+        bluebateekha = new blueBateeekha();
+        scorescreen = new ScoreScreenController();
+        high = false;
+        //konbelasound = new MediaPlayer(music1);
+        //Explosion = new MediaPlayer(music2);
+        //fawakeh = new MediaPlayer(sound3);
+        save = Save.getSave();
+        FirstScreenController.mediaPlayer.setVolume(0.3);
+        moza = new MozetElNagah();
+        konbela = new KonbelaBOM();
+        this.min = min;
+        this.max = max;
+        pane = new Group();
+        pause.setDisable(false);
+     if(ClassicScreen.load == false)
+     {
+        seconds = 60;
+        flag = 0;
+        score = 0;
+     }
+     else
+     {
+         seconds = save.seconds;
+         flag = 0;
+         score = save.score;
+     }
+        objects = new ArrayList<>();
+        sliced = new ArrayList<>();
+        labels = new ArrayList<>();
+        labels2 = new ArrayList<>();
+        scene = new Scene(pane, 800, 500);
+        Canvas canvas = new Canvas(800, 500);
+        pause.setDisable(false);
+        Image image = new Image("background.jpg");
+        pause.setTranslateX(720);
+        pause.setTranslateY(10);
+
+        pause.setGraphic(new ImageView("pause.png"));
+        lb.setText("Time: "+seconds);
+        lb.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        lb.setTextFill(Color.web("#ff3e3e"));
+        lb.setTranslateX(350);
+        lb.setTranslateY(14);
+        scorelabel.setTranslateX(110);
+        scorelabel.setTranslateY(14);
+        scorelabel.setText("Your score: "+score);
+        scorelabel.setTextFill(Color.web("#1ba157"));
+        scorelabel.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        HighScore.setText("High score: "+highscore.loadHighArcade());
+        HighScore.setTranslateY(45);
+        HighScore.setTranslateX(110);
+        HighScore.setTextFill(Color.web("#1ba157"));
+        instructions.setTranslateX(725);
+        instructions.setTranslateY(70);
+        instructions.setStyle("-fx-background-color: transparent ");
+        instructions.setGraphic(new ImageView("questionMark.png"));
+        HighScore.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        pause.setStyle("-fx-background-color: transparent ");
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.drawImage(image, 0, 0);
+        soundmute = false;
+        pane.getChildren().addAll(canvas,pause,scorelabel,lb,HighScore,instructions);
+
+        if(flag==0)
+        {
+            doTime();
+            timer = new AnimationTimer() {
+                @Override
+                public void handle(long arg0) {
+                    try {
+                        GameUpdate(gc);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            };
+            timer.start();
+        }
+
+        pause.setOnAction(new EventHandler<ActionEvent>()
+        {
+
+            @Override
+            public void handle(ActionEvent event) {
+                pausemenu = new PauseMenuController();
+                flag =1;
+                timer.stop();
+                pause.setDisable(true);
+                Parent root = null;
+                try {
+                    root = FXMLLoader.load(getClass().getResource("PauseMenu.fxml"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+               // Stage currentStage = (Stage) pane.getScene().getWindow();
+                PauseMenuController.previousStage = (Stage) pane.getScene().getWindow();
+                // pausemenu.getScreen(pausemenu.classicScreen);
+                //pausemenu.level =1;
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.initStyle(StageStyle.UNDECORATED);
+                //arcadeScreen.pause.setDisable(false);
+                FirstScreenController.mediaPlayer.pause();
+                stage.show();
+            }
+
+        });
+        instructions.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                flag =1;
+                timer.stop();
+                Parent root = null;
+                try {
+                    root = FXMLLoader.load(getClass().getResource("instructions.fxml"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Stage currentStage = (Stage) pane.getScene().getWindow();
+                //   PauseMenuController.previousStage = (Stage) pane.getScene().getWindow();
+                // pausemenu.getScreen(pausemenu.classicScreen);
+                //pausemenu.level =1;
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                instructions.setDisable(true);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.initStyle(StageStyle.UNDECORATED);
+                FirstScreenController.mediaPlayer.pause();
+                stage.show();
+            }
+        });
+    }
+    public int rand(int min, int max) {
+        return (int)(Math.random() * max + min);
+    }
+
+    public void doTime() {
+        Timeline time= new Timeline();
+        KeyFrame frame= new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>(){
+
+            @Override
+            public void handle(ActionEvent event) {
+                seconds--;
+                lb.setText("Time: "+seconds.toString());
+                if( flag==1 ){
+                    time.stop();
+                }
+                if(seconds%1 == 0) {
+                    FruitsFactory Fruit = new FruitsFactory();
+                    Fruits newFruit = Fruit.getFruit(min,max);
+                    newFruit.sprite.setPosY(499);
+                    newFruit.sprite.setPosX(rand(10,720));
+     //               spritesOnScreen.add(newFruit.sprite);
+                    objects.add(newFruit);
+                }
+                if(seconds%5 == 0) {
+                    KonbelaFactory konbela = new KonbelaFactory();
+                    Konbela newKonbela = konbela.getKonbela();
+                    newKonbela.sprite.setPosX(rand(10,720));
+                    newKonbela.sprite.setPosY(499);
+                    //spritesOnScreen.add(newKonbela.sprite);
+                    objects.add(newKonbela);
+                }
+                if(seconds%10==0) {
+                    SpecialFruitsFactory specialfruit = new SpecialFruitsFactory();
+                    SpecialFruits newSpecialFruit = specialfruit.getSpecialFruit();
+                    newSpecialFruit.sprite.setPosX(rand(10,720));
+                    newSpecialFruit.sprite.setPosY(499);
+                    //spritesOnScreen.add(newSpecialFruit.sprite);
+                    objects.add(newSpecialFruit);
+                }
+            }
+        });
+
+        time.setCycleCount(Timeline.INDEFINITE);
+        time.getKeyFrames().addAll(frame);
+        if(time!=null){
+            time.stop();
+        }
+        time.play();
+    }
+
+    private  void GameUpdate(GraphicsContext  gc) throws IOException {
+        gc.clearRect(0,0,800,500);
+        Image image = new Image("background.jpg");
+        gc.drawImage(image, 0, 0);
+        for (int i=0;i<objects.size();i++) {
+            objects.get(i).sprite.updateLocation();
+            objects.get(i).sprite.render(gc);
+        }
+        //  scene.setCursor(Cursor.NONE);
+        scene.setOnMouseDragged(e ->
+        {
+            if (flag == 0) {
+                Media musicFile = new Media(new File("sliceSound.mp3").toURI().toString());
+                //mediaPlayer = new MediaPlayer(musicFile);
+                //mediaPlayer.play();
+                double x = e.getX();
+                double y = e.getY();
+                //Image blade = new Image("sword.png");
+                //scene.setCursor(new ImageCursor(blade));
+                for (int i = 0; i < objects.size(); i++) {
+                    if (objects.get(i).sprite.contains(e.getX(), e.getY())) {
+                        //mediaPlayer.play();
+                        if (objects.get(i).type == 1) {
+                            if(soundmute!=true)
+                            {
+                                mediaPlayer = new MediaPlayer(musicFile);
+                                mediaPlayer.play();
+                            }
+                            sliced.add(objects.get(i));
+                            for (int k = 0; k < sliced.size(); k++) {
+                                if (sliced.get(k).equals(objects.get(i))) {
+                                    sliced.get(k).half1.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half2.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half1.posX = objects.get(i).sprite.posX + 70;
+                                    sliced.get(k).half2.posX = objects.get(i).sprite.posX;
+                                }
+                            }
+                            objects.remove(i);
+                            score++;
+                            scorelabel.setText("Your Score: " + score);
+                        } else if (objects.get(i).type == 2) {
+                            if(soundmute!=true)
+                            {
+                                mediaPlayer = new MediaPlayer(musicFile);
+                                mediaPlayer.play();
+                            }
+                            sliced.add(objects.get(i));
+                            for (int k = 0; k < sliced.size(); k++) {
+                                if (sliced.get(k).equals(objects.get(i))) {
+                                    sliced.get(k).half1.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half2.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half1.posX = objects.get(i).sprite.posX + 70;
+                                    sliced.get(k).half2.posX = objects.get(i).sprite.posX;
+                                }
+                            }
+                            objects.remove(i);
+                            score++;
+                            scorelabel.setText("Your Score: " + score);
+                        } else if (objects.get(i).type == 3) {
+                            sliced.add(objects.get(i));
+                            if(soundmute!=true)
+                            {
+                                mediaPlayer = new MediaPlayer(musicFile);
+                                mediaPlayer.play();
+                            }
+                            for (int k = 0; k < sliced.size(); k++) {
+                                if (sliced.get(k).equals(objects.get(i))) {
+                                    sliced.get(k).half1.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half2.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half1.posX = objects.get(i).sprite.posX + 70;
+                                    sliced.get(k).half2.posX = objects.get(i).sprite.posX;
+                                }
+                            }
+                            objects.remove(i);
+                            score++;
+                            scorelabel.setText("Your Score: " + score);
+                        }
+                        else if(objects.get(i).type==4)
+                        {
+                            sliced.add(objects.get(i));
+                            labels.add((SpecialFruits) objects.get(i));
+                            if(soundmute!=true)
+                            {
+                                mediaPlayer = new MediaPlayer(musicFile);
+                                mediaPlayer.play();
+                            }
+                            for (int k = 0; k < sliced.size(); k++) {
+                                if (sliced.get(k).equals(objects.get(i))) {
+                                    sliced.get(k).half1.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half2.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half1.posX = objects.get(i).sprite.posX + 70;
+                                    sliced.get(k).half2.posX = objects.get(i).sprite.posX;
+                                }
+                            }
+                            for(int k =0;k<labels.size();k++)
+                            {
+                                if(labels.get(k).equals(objects.get(i)))
+                                {
+                                    labels.get(k).label.posX = objects.get(i).sprite.posX+30;
+                                    labels.get(k).label.posY = objects.get(i).sprite.posY;
+                                }
+                            }
+                            objects.remove(i);
+                            moza.bonus();
+                            score++;
+                            scorelabel.setText("Your Score: " + score);
+                        }
+                        else if(objects.get(i).type==5)
+                        {
+                            sliced.add(objects.get(i));
+                            labels.add((SpecialFruits) objects.get(i));
+                            if(soundmute!=true)
+                            {
+                                mediaPlayer = new MediaPlayer(musicFile);
+                                mediaPlayer.play();
+                            }
+                            for (int k = 0; k < sliced.size(); k++) {
+                                if (sliced.get(k).equals(objects.get(i))) {
+                                    sliced.get(k).half1.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half2.posY = objects.get(i).sprite.posY;
+                                    sliced.get(k).half1.posX = objects.get(i).sprite.posX + 70;
+                                    sliced.get(k).half2.posX = objects.get(i).sprite.posX;
+                                }
+                            }
+                            for(int k =0;k<labels.size();k++)
+                            {
+                                if(labels.get(k).equals(objects.get(i)))
+                                {
+                                    labels.get(k).label.posX = objects.get(i).sprite.posX+30;
+                                    labels.get(k).label.posY = objects.get(i).sprite.posY;
+                                }
+                            }
+                            objects.remove(i);
+                            bluebateekha.bonus();
+                            scorelabel.setText("Your Score: " + score);
+                        }
+                        else if (objects.get(i).type == 6 && objects.get(i).sprite.slice != 1) {
+                            objects.get(i).sprite.slice = 1;
+                            labels2.add((Konbela) objects.get(i));
+                            for(int k =0;k<labels2.size();k++)
+                            {
+                                if(labels2.get(k).equals(objects.get(i)))
+                                {
+                                    labels2.get(k).label.posX = objects.get(i).sprite.posX+30;
+                                    labels2.get(k).label.posY = objects.get(i).sprite.posY;
+                                }
+                            }
+                            if(soundmute!=true) {
+                                konbelasound = new MediaPlayer(music1);
+                                konbelasound.play();
+                            }
+                            konbela.explode();
+                        } else if (objects.get(i).type == 7 && objects.get(i).sprite.slice != 1) {
+                            objects.get(i).sprite.slice = 1;
+                            Explosion = new MediaPlayer(music2);
+                            Explosion.play();
+                            timer.stop();
+                            flag = 1;
+                            if(score>=highscore.high1||score>=highscore.high2||score>=highscore.high3||score>=highscore.high4||score>=highscore.high5)
+                            {
+                                high = true;
+                            }
+                            Parent root = null;
+                            try {
+                                root = FXMLLoader.load(getClass().getResource("ScoreSCreen.fxml"));
+                                highscore.saveArcade(score);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                            Stage currentStage = (Stage) pane.getScene().getWindow();
+                            currentStage.setScene(new Scene(root));
+                            currentStage.show();
+                        }
+                        gc.clearRect(0, 0, 800, 1500);
+                        gc.drawImage(image, 0, 0);
+                        for (int j = 0; j < objects.size(); j++) {
+                            if (objects.get(j).sprite.slice == 0) {
+                                objects.get(j).sprite.updateLocation();
+                                objects.get(j).sprite.render(gc);
+                                if (objects.get(j).sprite.posY >= 499) {
+                                    fawakeh = new MediaPlayer(sound3);
+                                    objects.remove(j);
+       //                             System.out.println("SIZE" + fruits.size());
+                                }
+                            }
+                        }
+                        for (int j = 0; j < sliced.size(); j++) {
+                            sliced.get(j).half1.updateLocation();
+                            sliced.get(j).half2.updateLocation();
+                            sliced.get(j).half1.render(gc);
+                            sliced.get(j).half2.render(gc);
+                        }
+                    }
+                }
+            }
+        });
+        for (int j=0;j<objects.size();j++) {
+            if (objects.get(j).sprite.slice == 0) {
+                objects.get(j).sprite.updateLocation();
+                objects.get(j).sprite.render(gc);
+                if (objects.get(j).sprite.posY >= 499)
+                {
+                    objects.remove(j);
+                }
+            }
+        }
+        for(int j=0;j<sliced.size();j++)
+        {
+            sliced.get(j).half1.updateLocation();
+            sliced.get(j).half2.updateLocation();
+            sliced.get(j).half1.render(gc);
+            sliced.get(j).half2.render(gc);
+            if(sliced.get(j).half1.posY>=499&&sliced.get(j).half2.posY>=499)
+            {
+                sliced.remove(j);
+            }
+        }
+        for(int j=0;j<labels.size();j++)
+        {
+            labels.get(j).label.updateLocation();
+            labels.get(j).label.render(gc);
+            if(labels.get(j).label.posY>=499)
+                labels.remove(j);
+        }
+        for(int j=0;j<labels2.size();j++)
+        {
+            labels2.get(j).label.updateLocation();
+            labels2.get(j).label.render(gc);
+            if(labels2.get(j).label.posY>=499)
+                labels2.remove(j);
+        }
+        if(score > highscore.high1)
+        {
+            HighScore.setText("High score: "+score);
+        }
+        if(seconds<=0)
+        {
+            timer.stop();
+            highscore.saveArcade(score);
+            flag =1;
+            if(score>=highscore.high1||score>=highscore.high2||score>=highscore.high3||score>=highscore.high4||score>=highscore.high5)
+            {
+                high = true;
+            }
+            Parent root = null;
+            try {
+                root = FXMLLoader.load(getClass().getResource("ScoreScreen.fxml"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            Stage currentStage = (Stage) pane.getScene().getWindow();
+            currentStage.setScene(new Scene(root));
+            currentStage.show();
+        }
+    }
+
+    @Override
+    public Scene getScene()
+    {
+        return this.scene;
+    }
+}

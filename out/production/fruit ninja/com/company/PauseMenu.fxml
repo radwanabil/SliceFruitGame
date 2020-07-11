@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="pane" prefHeight="490.0" prefWidth="484.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.PauseMenuController">
+   <children>
+      <ImageView fitHeight="490.0" fitWidth="484.0">
+         <image>
+            <Image url="@../../backpause%20(2)%20-%20Copy.jpg" />
+         </image>
+      </ImageView>
+      <Button layoutX="182.0" layoutY="85.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#resume" prefHeight="60.0" prefWidth="120.0" style="-fx-background-color: transparent;;">
+         <font>
+            <Font name="Bodoni MT Bold" size="23.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="96.0" fitWidth="200.0">
+               <image>
+                  <Image url="@../../resume%20(2).png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="182.0" layoutY="192.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#reset" prefHeight="60.0" prefWidth="120.0" style="-fx-background-color: transparent;" textFill="#d37b29">
+         <font>
+            <Font name="Bodoni MT Bold" size="23.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="102.0" fitWidth="201.0">
+               <image>
+                  <Image url="@../../reset.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="182.0" layoutY="306.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#newGame" prefHeight="60.0" prefWidth="120.0" style="-fx-background-color: transparent;">
+         <font>
+            <Font name="Bodoni MT Bold" size="23.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="101.0" fitWidth="200.0">
+               <image>
+                  <Image url="@../../newgame.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="316.0" layoutY="413.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sound" prefHeight="35.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fitHeight="59.0" fitWidth="63.0">
+               <image>
+                  <Image url="@../../sound.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="405.0" layoutY="413.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#music" prefHeight="35.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fitHeight="69.0" fitWidth="70.0">
+               <image>
+                  <Image url="@../../musicOn.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="182.0" layoutY="407.0" mnemonicParsing="false" onAction="#save" text="Save" />
+   </children>
+</AnchorPane>
